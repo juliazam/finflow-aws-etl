@@ -9,3 +9,9 @@ variable "raw_bucket_name" {
   type = string
   default = "finflow-raw-data"
 }
+
+variable "processed_bucket_name" {
+  description = "S3 bucket for processed data"
+  type = string
+  default = "finflow-processed-data"
+}
