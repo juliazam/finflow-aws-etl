@@ -22,3 +22,15 @@ services:
        echo 'AWS CLI configured for Ministack'"
     volumes:
       - ${USERPROFILE}/.aws:/root/.aws
+    
+  terraform-init:
+    image: hashicorp/terraform:1.15
+    container_name: finflow-terraform-init
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    depends_on:
+      ministack:
+        condition: service_healthy
+    entrypoint: sh
+    command: -c "cd terraform/environments/dev && terraform init && terraform apply -auto-approve"
