@@ -1,0 +1,7 @@
+services:
+  ministack:
+    image: ministackorg/ministack
+    container_name: finflow-ministack
+    ports:
+      - "4566:4566"
+    restart: unless-stopped
