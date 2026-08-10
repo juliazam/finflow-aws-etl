@@ -5,3 +5,20 @@ services:
     ports:
       - "4566:4566"
     restart: unless-stopped
+
+  aws-init:
+    image: amazon/aws-cli
+    container_name: finflow-aws-init
+    depends_on:
+      - ministack
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: >
+      "aws configure set aws_access_key_id $$AWS_ACCESS_KEY_ID &&
+       aws configure set aws_secret_access_key $$AWS_SECRET_ACCESS_KEY &&
+       aws configure set region $$AWS_DEFAULT_REGION &&
+       aws configure set output json &&
+       echo 'AWS CLI configured for Ministack'"
+    volumes:
+      - ${USERPROFILE}/.aws:/root/.aws
