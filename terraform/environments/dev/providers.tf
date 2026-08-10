@@ -8,15 +8,15 @@ provider "aws" {
   s3_use_path_style            = true
 
   endpoints {
-    iam            = "http://localhost:4566"
-    s3             = "http://localhost:4566"
-    lambda         = "http://localhost:4566"
-    glue           = "http://localhost:4566"
-    athena         = "http://localhost:4566"
-    redshift       = "http://localhost:4566"
-    sfn            = "http://localhost:4566"
-    cloudwatch     = "http://localhost:4566"
-    cloudwatchlogs = "http://localhost:4566"
-    sts            = "http://localhost:4566"
+    iam            = "http://ministack:4566"
+    s3             = "http://ministack:4566"
+    lambda         = "http://ministack:4566"
+    glue           = "http://ministack:4566"
+    athena         = "http://ministack:4566"
+    redshift       = "http://ministack:4566"
+    sfn            = "http://ministack:4566"
+    cloudwatch     = "http://ministack:4566"
+    cloudwatchlogs = "http://ministack:4566"
+    sts            = "http://ministack:4566"
   }
 }
