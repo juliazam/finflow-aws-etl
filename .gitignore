@@ -1,0 +1,14 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Env
+.env
