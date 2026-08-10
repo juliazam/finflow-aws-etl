@@ -3,3 +3,9 @@ variable "aws_region" {
   type        = string
   default     = "ap-southeast-1"
 }
+
+variable "raw_bucket_name" {
+  description = "S3 bucket for raw data"
+  type = string
+  default = "finflow-raw-data"
+}
