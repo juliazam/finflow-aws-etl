@@ -40,3 +40,16 @@ resource "aws_s3_bucket_versioning" "processed_bucket_versioning" {
         status = "Enabled"
     }
 }
+
+resource "aws_s3_bucket_notification" "raw_bucket_s3_notification" {
+    bucket = aws_s3_bucket.raw_bucket.id
+
+    lambda_function {
+        lambda_function_arn = aws_lambda_function.validate_raw_file.arn
+        events              = ["s3:ObjectCreated:*"]
+        filter_prefix       = ""
+        filter_suffix       = ".csv"
+    }
+
+    depends_on = [aws_lambda_permission.raw_validator_allow_s3]
+}

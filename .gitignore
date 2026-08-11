@@ -12,3 +12,7 @@ __pycache__/
 
 # Env
 .env
+
+# Lambda function output
+output.json
+lambda_functions/raw_validator/*.zip

@@ -12,3 +12,11 @@ resource "aws_lambda_function" "validate_raw_file" {
     filename = data.archive_file.raw_data_zip.output_path
     source_code_hash = data.archive_file.raw_data_zip.output_base64sha256
 }
+
+resource "aws_lambda_permission" "raw_validator_allow_s3" {
+    statement_id  = "AllowExecutionFromS3"
+    action        = "lambda:InvokeFunction"
+    function_name = aws_lambda_function.validate_raw_file.function_name
+    principal     = "s3.amazonaws.com"
+    source_arn = aws_s3_bucket.raw_bucket.arn
+}
