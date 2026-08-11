@@ -38,3 +38,17 @@ resource "aws_iam_role_policy_attachment" "glue_etl_read" {
     role = aws_iam_role.glue_etl_role.name
     policy_arn = aws_iam_policy.glue_raw_read.arn
 }
+
+resource "aws_iam_role" "raw_data_lambda_validation_role" {
+    name = "raw-data-lambda-validation-role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Principal = { Service = "lambda.amazonaws.com"}
+                Action = "sts:AssumeRole"
+            }
+        ]
+    })
+}
