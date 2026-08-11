@@ -1,7 +1,7 @@
 data "archive_file" "raw_data_zip" {
     type        = "zip"
-    source_file = "${path.module}/../../lambda_functions/raw_validator/handler.py"
-    output_path = "${path.module}/../../lambda_functions/raw_validator/handler.zip"
+    source_file = "${path.module}/../../../lambda_functions/raw_validator/handler.py"
+    output_path = "${path.module}/../../../lambda_functions/raw_validator/handler.zip"
 }
 
 resource "aws_lambda_function" "validate_raw_file" {
