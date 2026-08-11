@@ -16,3 +16,4 @@ __pycache__/
 # Lambda function output
 output.json
 lambda_functions/raw_validator/*.zip
+test.csv
