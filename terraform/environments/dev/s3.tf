@@ -9,6 +9,27 @@ resource "aws_s3_bucket_versioning" "raw_bucket_versioning" {
     }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "raw_data_lifecycle" {
+    bucket = aws_s3_bucket.raw_bucket.id
+
+    rule {
+        id = "tiered-archive"
+        status = "Enabled"
+        
+        filter {}
+
+        transition {
+            days = 30
+            storage_class = "STANDARD_IA"
+        }
+
+        transition {
+            days = 90
+            storage_class = "GLACIER"
+        }
+    }
+}
+
 resource "aws_s3_bucket" "processed_bucket" {
     bucket = var.processed_bucket_name
 }
