@@ -16,3 +16,13 @@ resource "aws_security_group" "ec2_ssh_access" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
+
+resource "aws_instance" "bastion" {
+  ami                    = "ami-00000001"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.ec2_ssh_access.id]
+
+  tags = {
+    Name = "finflow-bastion"
+  }
+}
