@@ -18,5 +18,6 @@ provider "aws" {
     cloudwatch     = "http://ministack:4566"
     cloudwatchlogs = "http://ministack:4566"
     sts            = "http://ministack:4566"
+    ec2            = "http://ministack:4566"
   }
 }
