@@ -1,10 +1,12 @@
 services:
   ministack:
-    image: ministackorg/ministack
+    image: ministackorg/ministack:full
     container_name: finflow-ministack
     ports:
       - "4566:4566"
     restart: unless-stopped
+    environment:
+      - S3_PERSIST=1
 
   aws-init:
     image: amazon/aws-cli
