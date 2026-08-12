@@ -13,11 +13,11 @@ provider "aws" {
     lambda         = "http://ministack:4566"
     glue           = "http://ministack:4566"
     athena         = "http://ministack:4566"
-    redshift       = "http://ministack:4566"
     sfn            = "http://ministack:4566"
     cloudwatch     = "http://ministack:4566"
     cloudwatchlogs = "http://ministack:4566"
     sts            = "http://ministack:4566"
     ec2            = "http://ministack:4566"
+    rds = "http://ministack:4566"
   }
 }

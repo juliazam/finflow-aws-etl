@@ -15,3 +15,9 @@ variable "processed_bucket_name" {
   type = string
   default = "finflow-processed-data"
 }
+
+variable "redshift_cluster_pass" {
+  description = "Master password for Redshift cluster"
+  type = string
+  sensitive   = true
+}
