@@ -20,6 +20,27 @@ resource "aws_iam_policy" "glue_raw_read" {
     })
 }
 
+resource "aws_iam_policy" "glue_processed_write" {
+    name = "glue-processed-write-policy"
+    description = "Allows writint to processed_bucket_name"
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = [
+                    "s3:PutObject"
+                ]
+                Resource = [
+                    "arn:aws:s3:::${var.processed_bucket_name}",
+                    "arn:aws:s3:::${var.processed_bucket_name}/*"
+                ]
+            }
+        ]
+    })
+}
+
 resource "aws_iam_role" "glue_etl_role" {
     name = "glue-etl-role"
     assume_role_policy = jsonencode({
@@ -37,6 +58,11 @@ resource "aws_iam_role" "glue_etl_role" {
 resource "aws_iam_role_policy_attachment" "glue_etl_read" {
     role = aws_iam_role.glue_etl_role.name
     policy_arn = aws_iam_policy.glue_raw_read.arn
+}
+
+resource "aws_iam_role_policy_attachment" "glue_etl_write" {
+    role = aws_iam_role.glue_etl_role.name
+    policy_arn = aws_iam_policy.glue_processed_write.arn
 }
 
 resource "aws_iam_role" "raw_data_lambda_validation_role" {

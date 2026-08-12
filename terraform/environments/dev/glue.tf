@@ -31,3 +31,20 @@ resource "aws_glue_catalog_table" "raw_transactions" {
     }
   }
 }
+
+resource "aws_glue_job" "raw_to_processed" {
+  name     = "raw-to-processed-job"
+  role_arn = aws_iam_role.glue_etl_role.arn
+
+  command {
+    name            = "pythonshell"
+    script_location = "s3://${var.raw_bucket_name}/scripts/raw_to_processed.py"
+    python_version  = "3.9"
+  }
+
+  default_arguments = {
+    "--RAW_BUCKET"       = var.raw_bucket_name
+    "--PROCESSED_BUCKET" = var.processed_bucket_name
+    "--SOURCE_KEY"       = "test.csv"
+  }
+}

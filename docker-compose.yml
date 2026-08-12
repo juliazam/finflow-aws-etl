@@ -34,3 +34,6 @@ services:
         condition: service_healthy
     entrypoint: sh
     command: -c "cd terraform/environments/dev && terraform init && terraform apply -auto-approve"
+
+volumes:
+  ministack_data:
