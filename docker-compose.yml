@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     environment:
       - S3_PERSIST=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   aws-init:
     image: amazon/aws-cli

@@ -1,0 +1,4 @@
+boto3==1.43.69
+psycopg2==2.9.12
+python-dotenv==1.2.2
+pandas==3.0.5
