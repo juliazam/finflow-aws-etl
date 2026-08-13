@@ -167,3 +167,23 @@ resource "aws_iam_role_policy_attachment" "glue_invoke_lambda" {
     role = aws_iam_role.glue_trigger_lambda.name
     policy_arn = aws_iam_policy.glue_trigger_invoke.arn
 }
+
+resource "aws_iam_policy" "stepfunctions_lambda_invoke" {
+    name = "stepfunctions-lambda-invoke-policy"
+    description = "Allows Step Functions to invoke the Glue-trigger Lambda"
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = ["lambda:InvokeFunction"]
+                Resource = aws_lambda_function.run_glue_job.arn
+            }
+        ]
+    })
+}
+
+resource "aws_iam_role_policy_attachment" "stepfunctions_invoke_lambda" {
+    role = aws_iam_role.finflow_stepfunctions.name
+    policy_arn = aws_iam_policy.stepfunctions_lambda_invoke.arn
+}
