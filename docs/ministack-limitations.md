@@ -9,3 +9,4 @@
 | Athena (DuckDB) requires consistent line endings in CSV | Recreate test files using Python (`\n`) instead of PowerShell `echo/Set-Content` |
 | Athena executes actual SQL only in the `:full` image | Use `ministackorg/ministack:full` instead of the base image |
 | Redshift is not supported by Ministack at all (no API) | Replaced with RDS PostgreSQL — an actual Postgres container serving the same functional purpose (data is physically in the DB for heavy queries) |
+| Step Functions → Glue direct integration (`glue:startJobRun.sync`) is a stub and does not invoke actual Glue | ReplaceLambda intermediary with boto3 polling (`glue:StartJobRun/GetJobRun` in a loop) |
