@@ -38,6 +38,33 @@ services:
         condition: service_healthy
     entrypoint: sh
     command: -c "cd terraform/environments/dev && terraform init && terraform apply -auto-approve"
+  
+  stackport:
+    image: davireis/stackport
+    container_name: finflow-stackport
+    ports:
+      - "8080:8080"
+    environment:
+      - AWS_ENDPOINT_URL=http://ministack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=ap-southeast-1
+    depends_on:
+      - ministack
+  
+  pipeline-trigger:
+    image: amazon/aws-cli
+    container_name: finflow-pipeline-trigger
+    depends_on:
+      terraform-init:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: >
+      "aws stepfunctions start-execution
+       --endpoint-url=http://ministack:4566
+       --state-machine-arn arn:aws:states:$$AWS_DEFAULT_REGION:000000000000:stateMachine:finflow-etl-pipeline"
 
 volumes:
   ministack_data:
