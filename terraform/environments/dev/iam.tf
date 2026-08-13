@@ -132,3 +132,38 @@ resource "aws_iam_role_policy_attachment" "stepfunctions_glue_invoke" {
     role = aws_iam_role.finflow_stepfunctions.name
     policy_arn = aws_iam_policy.stepfunctions_glue_invoke_policy.arn
 }
+
+resource "aws_iam_role" "glue_trigger_lambda" {
+    name = "glue-trigger-lambda-role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = "sts:AssumeRole"
+                Principal = { Service = "lambda.amazonaws.com"}
+            }
+        ]
+    })
+}
+
+resource "aws_iam_policy" "glue_trigger_invoke" {
+    name = "glue-trigger-invoke-policy"
+    description = "Allows lambda to invoke Glue Jobs"
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = ["glue:StartJobRun", "glue:GetJobRun"]
+                Resource = "*"
+            }
+        ]
+    })
+}
+
+resource "aws_iam_role_policy_attachment" "glue_invoke_lambda" {
+    role = aws_iam_role.glue_trigger_lambda.name
+    policy_arn = aws_iam_policy.glue_trigger_invoke.arn
+}
