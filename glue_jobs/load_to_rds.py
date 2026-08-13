@@ -1,26 +1,27 @@
-import os
+''' Reads processed data and loads into RDS '''
 import io
 import psycopg2
-from dotenv import load_dotenv
 import boto3
 import pandas as pd
 
-load_dotenv()
-db_name = os.getenv("RDS_DB")
-db_user = os.getenv("RDS_DB_USER")
-db_pass = os.getenv("RDS_DB_PASS")
+DB_HOST = 'ministack'
+DB_PORT = "5432"
+DB_NAME = "finflow"
+DB_USER = "admin"
+DB_PASS = "Hla0mqO1l"
 
-access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
-access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-aws_region = os.getenv("AWS_DEFAULT_REGION")
+ACCESS_KEY_ID = "test"
+ACCESS_KEY = "test"
+AWS_REGION = "ap-southeast-1"
+
 
 try:
     with psycopg2.connect(
-        host = "localhost",
-        port = "15432",
-        database = db_name,
-        user = db_user,
-        password = db_pass
+        host = DB_HOST,
+        port = DB_PORT,
+        database = DB_NAME,
+        user = DB_USER,
+        password = DB_PASS
     ) as connection:
         with connection.cursor() as cursor:
 
@@ -39,24 +40,24 @@ try:
             # Read processed data from S3 bucket
             s3_client = boto3.client(
                 's3',
-                endpoint_url = 'http://localhost:4566',
-                aws_access_key_id = access_key_id,
-                aws_secret_access_key = access_key,
-                region_name = aws_region
+                endpoint_url = 'http://ministack:4566',
+                aws_access_key_id = ACCESS_KEY_ID,
+                aws_secret_access_key = ACCESS_KEY,
+                region_name = AWS_REGION
             )
-            bucket_name = 'finflow-processed-data'
-            file_key = 'processed_test.csv'
+            BUCKET_NAME = 'finflow-processed-data'
+            FILE_KEY = 'processed_test.csv'
 
             try:
                 # Get object from S3
-                response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+                response = s3_client.get_object(Bucket=BUCKET_NAME, Key=FILE_KEY)
 
                 # Get file content
                 csv_data = response['Body'].read().decode('utf-8')
 
                 # Create DataFrame from csv
                 df = pd.read_csv(io.StringIO(csv_data))
-                print(f'File {bucket_name}/{file_key} was read successfully.')
+                print(f'File {BUCKET_NAME}/{FILE_KEY} was read successfully.')
 
                 # Replace NaN to None (for correct insert in SQL)
                 df = df.where(pd.notnull(df), None)

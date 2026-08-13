@@ -7,10 +7,7 @@ resource "aws_iam_policy" "glue_raw_read" {
         Statement = [
             {
                 Effect = "Allow"
-                Action = [
-                    "s3:GetObject",
-                    "s3:ListBucket"
-                ]
+                Action = ["s3:GetObject", "s3:ListBucket"]
                 Resource = [
                     "arn:aws:s3:::${var.raw_bucket_name}",
                     "arn:aws:s3:::${var.raw_bucket_name}/*"
@@ -22,16 +19,33 @@ resource "aws_iam_policy" "glue_raw_read" {
 
 resource "aws_iam_policy" "glue_processed_write" {
     name = "glue-processed-write-policy"
-    description = "Allows writint to processed_bucket_name"
+    description = "Allows writing to processed_bucket_name"
 
     policy = jsonencode({
         Version = "2012-10-17"
         Statement = [
             {
                 Effect = "Allow"
-                Action = [
-                    "s3:PutObject"
+                Action = ["s3:PutObject"]
+                Resource = [
+                    "arn:aws:s3:::${var.processed_bucket_name}",
+                    "arn:aws:s3:::${var.processed_bucket_name}/*"
                 ]
+            }
+        ]
+    })
+}
+
+resource "aws_iam_policy" "glue_processed_read" {
+    name = "glue-processed-read-policy"
+    description = "Allows reading from processed_bucket_name"
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = ["s3:GetObject", "s3:ListBucket"]
                 Resource = [
                     "arn:aws:s3:::${var.processed_bucket_name}",
                     "arn:aws:s3:::${var.processed_bucket_name}/*"
@@ -63,6 +77,11 @@ resource "aws_iam_role_policy_attachment" "glue_etl_read" {
 resource "aws_iam_role_policy_attachment" "glue_etl_write" {
     role = aws_iam_role.glue_etl_role.name
     policy_arn = aws_iam_policy.glue_processed_write.arn
+}
+
+resource "aws_iam_role_policy_attachment" "glue_etl_processed_read" {
+    role = aws_iam_role.glue_etl_role.name
+    policy_arn = aws_iam_policy.glue_processed_read.arn
 }
 
 resource "aws_iam_role" "raw_data_lambda_validation_role" {

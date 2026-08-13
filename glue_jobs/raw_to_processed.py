@@ -1,12 +1,11 @@
 ''' Reads raw data, adds label and saves into processed data '''
-import os
 import csv
 import io
 import boto3
 
 # NOTE: default_arguments from aws_glue_job (Terraform) are not passed to
 # subprocess when running in pythonshell on Ministack—a known emulator limitation.
-# The values ​​are hardcoded as pipeline constants.
+# The values are hardcoded as pipeline constants.
 RAW_BUCKET = 'finflow-raw-data'
 PROCESSED_BUCKET = 'finflow-processed-data'
 SOURCE_KEY = 'test.csv'

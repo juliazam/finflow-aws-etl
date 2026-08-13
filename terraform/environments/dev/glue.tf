@@ -48,3 +48,14 @@ resource "aws_glue_job" "raw_to_processed" {
     "--SOURCE_KEY"       = "test.csv"
   }
 }
+
+resource "aws_glue_job" "processed_to_rds" {
+  name = "processed-to-rds-job"
+  role_arn = aws_iam_role.glue_etl_role.arn
+
+  command {
+    name = "pythonshell"
+    script_location = "s3://${var.raw_bucket_name}/scripts/load_to_rds.py"
+    python_version = "3.9"
+  }
+}
