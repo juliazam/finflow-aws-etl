@@ -97,3 +97,38 @@ resource "aws_iam_role" "raw_data_lambda_validation_role" {
         ]
     })
 }
+
+resource "aws_iam_role" "finflow_stepfunctions" {
+    name = "finflow-stepfunctions-role"
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = "sts:AssumeRole"
+                Principal = { Service = "states.amazonaws.com"}
+            }
+        ]
+    })
+}
+
+resource "aws_iam_policy" "stepfunctions_glue_invoke_policy" {
+    name = "stepfunctions-glue-invoke-policy"
+    description = "Allows invoke stepfunctions"
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = ["glue:StartJobRun", "glue:GetJobRun"]
+                Resource = "*"
+            }
+        ]
+    })
+}
+
+resource "aws_iam_role_policy_attachment" "stepfunctions_glue_invoke" {
+    role = aws_iam_role.finflow_stepfunctions.name
+    policy_arn = aws_iam_policy.stepfunctions_glue_invoke_policy.arn
+}

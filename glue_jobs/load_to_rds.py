@@ -1,8 +1,8 @@
 ''' Reads processed data and loads into RDS '''
 import io
+import csv
 import psycopg2
 import boto3
-import pandas as pd
 
 DB_HOST = 'ministack'
 DB_PORT = "5432"
@@ -55,15 +55,13 @@ try:
                 # Get file content
                 csv_data = response['Body'].read().decode('utf-8')
 
-                # Create DataFrame from csv
-                df = pd.read_csv(io.StringIO(csv_data))
+                # Read data from csv
+                reader = csv.DictReader(io.StringIO(csv_data))
+                records_to_insert = [
+                    (row['id'], row['amount'], row['processed'])
+                    for row in reader
+                ]
                 print(f'File {BUCKET_NAME}/{FILE_KEY} was read successfully.')
-
-                # Replace NaN to None (for correct insert in SQL)
-                df = df.where(pd.notnull(df), None)
-
-                records_to_insert = list(df[['id', 'amount', 'processed']].
-                                        itertuples(index=False, name=None))
                 print(f"Loading {len(records_to_insert)} rows.")
 
             except Exception as err:
